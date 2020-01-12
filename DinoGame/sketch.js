@@ -48,7 +48,7 @@ function draw() {
     if (stopwatch.time() / 10 > 4000) {
       let rand = random(1);
       if (rand > 0.66) {
-        obs = new Obsticle(pom, 110, doImage);
+        obs = new Obsticle(pom, 150, doImage);
       } else if (rand > 0.33 && rand < 0.66) {
         obs = new Obsticle(pom, 95, oImage);
       }
@@ -72,6 +72,9 @@ function draw() {
   runner.move();
 
   for (let o of obsticles) {
+    if (o.x - runner.x <= 200) {
+      runner.jump();
+    }
     o.move();
     o.show();
     if (o.x < -100) {
