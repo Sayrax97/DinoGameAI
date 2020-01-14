@@ -44,7 +44,7 @@ class Runner {
     inputs[2] = closest.y / height;
     let output = this.brain.predict(inputs);
     if (output[0] > output[1]) {
-      this.jump(25);
+      this.jump(20);
     }
   }
   jump(value) {

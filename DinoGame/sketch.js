@@ -9,7 +9,7 @@ let bImage;
 let doImage;
 let obsticles = [];
 let stopwatch;
-let i = 0;
+let xlrt = 0;
 let pom = 10;
 let counter = 0;
 function preload() {
@@ -37,7 +37,7 @@ function restart() {
   generation++;
   if (highscore < savedRunners[POPULATION - 1].score)
     highscore = savedRunners[POPULATION - 1].score;
-  i = 0;
+  xlrt = 0;
   pom = 10;
   nextGeneration();
   stopwatch.reset();
@@ -45,14 +45,14 @@ function restart() {
   textSize(14);
 }
 function draw() {
-  let distance = 65 - 1 * i;
+  let distance = 65 - xlrt;
   if (distance < 50) {
     distance = 50;
   }
   if (counter % distance == 0) {
-    if (stopwatch.time() / 10 > 1500 * i) {
+    if (stopwatch.time() / 10 > 1500 * xlrt) {
       pom = pom + 1;
-      i++;
+      xlrt++;
       obsticles.forEach(obs => {
         obs.moveV = pom;
       });
@@ -92,7 +92,7 @@ function draw() {
   text(`Generation:${generation}`, width - 850, 10);
   text(`Highscore:${highscore}`, width - 750, 10);
   text(`Alive:${runners.length}`, width - 600, 10);
-  if (runners.length != 0) {
+  if (runners.length > 0) {
     for (let runner of runners) {
       if (obsticles.length > 0) runner.think(obsticles);
       runner.move();
@@ -105,6 +105,7 @@ function draw() {
       if (runners[j].hits(obsticles[i])) {
         //textSize(32);
         savedRunners.push(runners.splice(j, 1)[0]);
+        j--;
         // fill(0);
         // text("Kraj Igre,pritisnite R da restartujete", width / 3, height / 3);
         //noLoop();
