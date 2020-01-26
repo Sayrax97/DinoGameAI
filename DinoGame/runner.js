@@ -19,7 +19,7 @@ class Runner {
     if (brain) {
       this.brain = brain.copy();
     } else {
-      this.brain = new NeuralNetwork(3, 3, 2);
+      this.brain = new NeuralNetwork(4, 3, 2);
     }
   }
   show() {
@@ -39,12 +39,15 @@ class Runner {
       }
     }
     let inputs = [];
-    inputs[0] = this.x / width;
-    inputs[1] = closest.x / width;
-    inputs[2] = closest.y / height;
-    let output = this.brain.predict(inputs);
-    if (output[0] > output[1]) {
-      this.jump(20);
+    if (closest != null) {
+      inputs[0] = this.x / width;
+      inputs[1] = closest.x / width;
+      inputs[2] = closest.y / height;
+      inputs[3] = closest.moveV / 100;
+      let output = this.brain.predict(inputs);
+      if (output[0] > output[1]) {
+        this.jump(25);
+      }
     }
   }
   jump(value) {

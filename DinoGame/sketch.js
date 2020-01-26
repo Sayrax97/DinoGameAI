@@ -1,4 +1,4 @@
-const POPULATION = 100;
+const POPULATION = 50;
 let generation = 1;
 let highscore = 0;
 let runners = [];
@@ -45,10 +45,10 @@ function restart() {
   textSize(14);
 }
 function draw() {
-  let distance = 65 - xlrt;
-  if (distance < 50) {
-    distance = 50;
-  }
+  let distance = 60;
+  // if (distance < 50) {
+  //   distance = 50;
+  // }
   if (counter % distance == 0) {
     if (stopwatch.time() / 10 > 1500 * xlrt) {
       pom = pom + 1;
@@ -57,8 +57,12 @@ function draw() {
         obs.moveV = pom;
       });
     }
-
-    let obs = new Obsticle(pom, 80, oImage);
+    let rand = random(1);
+    if (rand > 0.66) {
+      obs = new Obsticle(pom, 150, doImage);
+    } else if (rand > 0.33 && rand < 0.66) {
+      obs = new Obsticle(pom, 95, oImage);
+    } else obs = new Obsticle(pom, 80, oImage);
     // if (stopwatch.time() / 10 > 6000) {
     //   let rand = random(1);
     //   if (rand > 0.66) {
@@ -114,7 +118,7 @@ function draw() {
     }
     obsticles[i].move();
     obsticles[i].show();
-    if (obsticles[i].x < 0) {
+    if (obsticles[i].x < -50) {
       obsticles.splice(i, 1);
     }
   }
