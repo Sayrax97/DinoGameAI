@@ -11,10 +11,18 @@
   </head>
 
   <body>
+    <!-- <embed loop="true" src="theme.mp3" hidden="true" type="audio/x-pn-realaudio-plugin"></embed> -->
+    <audio id="audio" autoplay="autoplay" hidden  controls="controls">
+      <source src="theme.mp3" />     
+    </audio>
     <script src="stopwatch.js"></script>
     <script src="runner.js"></script>
-    <script src="obsticle.js"></script>
+    <script src="obstacle.js"></script>
     <script src="sketch.js"></script>
     <script src="ga.js"></script>
+    <script>
+      var audio = document.getElementById("audio");
+      audio.volume = 0.2;
+    </script>
   </body>
 </html>

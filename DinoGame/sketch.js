@@ -1,4 +1,5 @@
 const POPULATION = 50;
+let updateDistance = Math.floor(Math.random() * 40 + 40);
 let generation = 1;
 let highscore = 0;
 let runners = [];
@@ -7,11 +8,12 @@ let rImage;
 let oImage;
 let bImage;
 let doImage;
-let obsticles = [];
+let obstacles = [];
 let stopwatch;
 let xlrt = 0;
-let pom = 10;
-let counter = 0;
+let pause = false;
+let currentVelocity = 10;
+let frameCounter = 0;
 function preload() {
   rImage = loadImage("birthday.png");
   oImage = loadImage("barrier.png");
@@ -27,67 +29,51 @@ function setup() {
 }
 
 function keyPressed() {
-  if (key == "r") {
-    restart();
+  if(key == "k"){
+    killAll()
   }
 }
+
+function killAll(){
+  savedRunners.push(...runners)
+  runners = []
+  restart()
+}
 function restart() {
-  obsticles = [];
-  counter = 0;
+  obstacles = [];
+  frameCounter = 0;
   generation++;
   if (highscore < savedRunners[POPULATION - 1].score)
     highscore = savedRunners[POPULATION - 1].score;
   xlrt = 0;
-  pom = 10;
+  currentVelocity = 10;
   nextGeneration();
   stopwatch.reset();
-  //loop();
   textSize(14);
 }
 function draw() {
-  let distance = 60;
-  // if (distance < 50) {
-  //   distance = 50;
-  // }
-  if (counter % distance == 0) {
+  if (frameCounter % updateDistance == 0) {
     if (stopwatch.time() / 10 > 1500 * xlrt) {
-      pom = pom + 1;
+      currentVelocity = currentVelocity + 1;
       xlrt++;
-      obsticles.forEach(obs => {
-        obs.moveV = pom;
+      obstacles.forEach(obs => {
+        obs.moveV = currentVelocity;
       });
     }
     let rand = random(1);
     if (rand > 0.66) {
-      obs = new Obsticle(pom, 150, doImage);
-    } else if (rand > 0.33 && rand < 0.66) {
-      obs = new Obsticle(pom, 95, oImage);
-    } else obs = new Obsticle(pom, 80, oImage);
-    // if (stopwatch.time() / 10 > 6000) {
-    //   let rand = random(1);
-    //   if (rand > 0.66) {
-    //     obs = new Obsticle(pom, 150, doImage);
-    //   } else if (rand > 0.33 && rand < 0.66) {
-    //     obs = new Obsticle(pom, 95, oImage);
-    //   }
-    // } else if (stopwatch.time() / 10 > 3000 && stopwatch.time() / 10 < 6000) {
-    //   if (random(1) > 0.7) {
-    //     obs = new Obsticle(pom, 95, oImage);
-    //   }
-    // }
+      obs = new Obstacle(currentVelocity, 150, doImage);
+    } 
+    else if (rand > 0.33 && rand < 0.66) {
+      obs = new Obstacle(currentVelocity, 110, oImage);
+    } 
+    else obs = new Obstacle(currentVelocity, 80, oImage);
 
-    // let procentage = width * 0.65 - 0.01 * i;
-    // if (procentage < 0.5) {
-    //   procentage = 0.5;
-    // }
-    // if (obsticles.length > 0 && obsticles.slice(-1)[0].x < procentage)
-    //   obsticles.push(obs);
-    // else if (obsticles.length == 0) {
-    //   obsticles.push(obs);
-    // }
-    obsticles.push(obs);
+    obstacles.push(obs);
+    updateDistance = Math.floor(Math.random() * 30 + ((60 - xlrt) < 20 ? 20 : (60 - xlrt)) );
+    frameCounter = 0;
   }
-  counter++;
+  frameCounter++;
   background(220);
   fill(0);
   textSize(14);
@@ -98,28 +84,24 @@ function draw() {
   text(`Alive:${runners.length}`, width - 600, 10);
   if (runners.length > 0) {
     for (let runner of runners) {
-      if (obsticles.length > 0) runner.think(obsticles);
+      if (obstacles.length > 0) 
+        runner.think(obstacles);
       runner.move();
       runner.show();
     }
   }
 
-  for (let i = 0; i < obsticles.length; i++) {
+  for (let i = 0; i < obstacles.length; i++) {
     for (let j = 0; j < runners.length; j++) {
-      if (runners[j].hits(obsticles[i])) {
-        //textSize(32);
+      if (runners[j].hits(obstacles[i])) {
         savedRunners.push(runners.splice(j, 1)[0]);
         j--;
-        // fill(0);
-        // text("Kraj Igre,pritisnite R da restartujete", width / 3, height / 3);
-        //noLoop();
-        //restart();
       }
     }
-    obsticles[i].move();
-    obsticles[i].show();
-    if (obsticles[i].x < -50) {
-      obsticles.splice(i, 1);
+    obstacles[i].move();
+    obstacles[i].show();
+    if (obstacles[i].x < -50) {
+      obstacles.splice(i, 1);
     }
   }
 

@@ -1,4 +1,4 @@
-class Obsticle {
+class Obstacle {
   constructor(velocity, radius, image) {
     this.r = radius;
     this.x = width;

@@ -24,18 +24,15 @@ class Runner {
   }
   show() {
     image(rImage, this.x, this.y, this.r, this.r);
-    //fill(255, 50);
-    // ellipseMode(CORNER);
-    // ellipse(this.x, this.y, this.r, this.r);
   }
-  think(obsticles) {
+  think(obstacles) {
     let closest = null;
     let record = Infinity;
-    for (let i = 0; i < obsticles.length; i++) {
-      let diff = obsticles[i].x - this.x;
+    for (let i = 0; i < obstacles.length; i++) {
+      let diff = obstacles[i].x - this.x;
       if (diff > 0 && diff < record) {
         record = diff;
-        closest = obsticles[i];
+        closest = obstacles[i];
       }
     }
     let inputs = [];
@@ -45,8 +42,8 @@ class Runner {
       inputs[2] = closest.y / height;
       inputs[3] = closest.moveV / 100;
       let output = this.brain.predict(inputs);
-      if (output[0] > output[1]) {
-        this.jump(25);
+      if(output[0] > output[1]){
+        this.jump(25)
       }
     }
   }
